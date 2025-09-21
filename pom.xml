@@ -43,6 +43,8 @@
 	</dependencies>
 
 	<build>
+			<finalName>springBootApp</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

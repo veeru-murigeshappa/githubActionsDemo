@@ -1,0 +1,42 @@
+name: CICD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+    - name: checkout source
+      uses: actions/checkout@v3
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 21
+    - name: build project
+      run: mvn clean install -DskipTests
+    - name: login to dockerhub
+      run: docker login -u {{secrets.DOCKER_USERNAME}} -p {{secrets.DOCKER_PASSWORD}}
+    - name: build docker image
+      run: docker build -t integration/github-actions-demo
+    - name: publish image to dockerhub
+      run: docker push integration/github-actions-demo:latest
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: pull image from dockerhub
+        run: docker pull integration/github-actions-demo:latest
+      - name: delete old container
+        run: docker rm -f springboot-container
+      - name: run docker container
+        run: docker run -d -p 8080:8080 --name springboot-container integration/github-actions-demo
+
+
+
+
+
+
+
