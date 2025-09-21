@@ -20,9 +20,9 @@ jobs:
     - name: login to dockerhub
       run: docker login -u veeru123 -p Germany@123
     - name: build docker image
-      run: docker build -t integration/github-actions-demo .
+      run: docker build -t veeru123/github-actions-demo .
     - name: publish image to dockerhub
-      run: docker push integration/github-actions-demo:latest
+      run: docker push veeru123/github-actions-demo:latest
   deploy:
     needs: build
     runs-on: [aws-ec2]
